@@ -8,21 +8,30 @@
 // parties or used without the express written permission of eg technology ltd.
 
 #include "MenuScreen.h"
+#include "GameEngine.h"
 
-#include "Button.h"
-
-MenuScreen::MenuScreen(olc::PixelGameEngine* gameEngine)
+MenuScreen::MenuScreen(GameEngine* gameEngine)
 	: mGameEngine(gameEngine)
 	, mBeginButton(mGameEngine, Button::Config{ 45, 12, "Begin", {57, 70}, {3, 2}, olc::WHITE, olc::DARK_BLUE, olc::DARK_GREEN })
+	, mExitButton(mGameEngine, Button::Config{ 45, 12, "Exit", {57, 90}, {5, 2}, olc::WHITE, olc::DARK_BLUE, olc::DARK_GREEN })
 {
 	mButtons.push_back(&mBeginButton);
+	mButtons.push_back(&mExitButton);
 }
 
 void MenuScreen::update()
 {
 	for (const auto& button : mButtons)
 	{
-		button->CheckActive();
+		button->UpdateActive();
+	}
+
+	if (mGameEngine->GetMouse(olc::Mouse::LEFT).bPressed || mGameEngine->GetMouse(olc::Mouse::LEFT).bHeld)
+	{
+		if (mBeginButton.GetActive())
+		{
+			mGameEngine->ChangeState(GameEngine::State::Setup);
+		}
 	}
 }
 

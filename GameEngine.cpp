@@ -23,7 +23,6 @@ bool GameEngine::OnUserCreate()
 
 bool GameEngine::OnUserUpdate(float fElapsedTime)
 {
-	olc::WHITE;
 	mCurrentScreen->update();
 	mCurrentScreen->render();
 	return true;
@@ -32,4 +31,22 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
 bool GameEngine::OnUserDestroy()
 {
 	return true;
+}
+
+void GameEngine::ChangeState(State newState)
+{
+	if (newState != mState)
+	{
+		mState = newState;
+		switch (mState)
+		{
+		case State::Menu: 
+			mCurrentScreen = &mMenu;
+			break;
+		case State::Setup: break;
+		case State::Running: break;
+		case State::Finished: break;
+		default: ;
+		}
+	}
 }

@@ -11,22 +11,23 @@
 #include <vector>
 #include "Button.h"
 #include "IScreen.h"
-#include "olcPixelGameEngine/olcPixelGameEngine.h"
+
+class GameEngine;
 
 class MenuScreen : public IScreen
 {
 public:
-	MenuScreen(olc::PixelGameEngine* gameEngine);
+	MenuScreen(GameEngine* gameEngine);
 	~MenuScreen() override = default;
 
 	void update() override;
 	void render() override;
 
 private:
-
-	olc::PixelGameEngine* mGameEngine;
+	GameEngine* mGameEngine;
 
 	Button mBeginButton;
+	Button mExitButton;
 
 	std::vector<Button*> mButtons;
 

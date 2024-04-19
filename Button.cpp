@@ -16,7 +16,7 @@ Button::Button(olc::PixelGameEngine* gameEngine, const Config& config)
 {
 }
 
-void Button::CheckActive()
+void Button::UpdateActive()
 {
 	const olc::vi2d mousePos = mGameEngine->GetMousePos();
 

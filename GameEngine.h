@@ -12,10 +12,17 @@
 #include "olcPixelGameEngine/olcPixelGameEngine.h"
 #include "MenuScreen.h"
 
-class GameEngine final :
-    public olc::PixelGameEngine
+class GameEngine : public olc::PixelGameEngine
 {
 public:
+    enum class State
+    {
+	    Menu,
+        Setup,
+        Running,
+        Finished
+    };
+
     GameEngine();
     ~GameEngine() override = default;
 
@@ -23,10 +30,13 @@ public:
     bool OnUserUpdate(float fElapsedTime) override;
     bool OnUserDestroy() override;
 
+    void ChangeState(State newState);
+
 private:
+
+    State mState;
 
     MenuScreen mMenu;
 
     IScreen* mCurrentScreen;
 };
-

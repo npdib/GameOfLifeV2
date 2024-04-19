@@ -29,7 +29,8 @@ public:
 	Button(olc::PixelGameEngine* gameEngine, const Config& config);
 	~Button() = default;
 
-	void CheckActive();
+	void UpdateActive();
+	[[nodiscard]] bool GetActive() const { return  mActive; }
 	void draw() const;
 
 private:
