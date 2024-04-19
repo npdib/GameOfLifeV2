@@ -1,4 +1,4 @@
-// GameEngine.cpp
+// IScreen.h
 //   
 // (c) eg technology ltd, 2024. All rights reserved. 
 //  
@@ -7,29 +7,16 @@
 // purposes. The source code is confidential information and must not be disclosed to third 
 // parties or used without the express written permission of eg technology ltd.
 
-#include "GameEngine.h"
+#pragma once
 
-GameEngine::GameEngine()
-	: mMenu(this)
-	, mCurrentScreen(&mMenu)
+class IScreen
 {
-	sAppName = "Game of Life";
-}
+public:
+	IScreen() = default;
+	virtual ~IScreen() = default;
 
-bool GameEngine::OnUserCreate()
-{
-	return true;
-}
+	virtual void update() = 0;
+	virtual void render() = 0;
+};
 
-bool GameEngine::OnUserUpdate(float fElapsedTime)
-{
-	olc::WHITE;
-	mCurrentScreen->update();
-	mCurrentScreen->render();
-	return true;
-}
 
-bool GameEngine::OnUserDestroy()
-{
-	return true;
-}

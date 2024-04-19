@@ -1,4 +1,4 @@
-// GameEngine.h
+// MenuScreen.h
 //   
 // (c) eg technology ltd, 2024. All rights reserved. 
 //  
@@ -8,25 +8,27 @@
 // parties or used without the express written permission of eg technology ltd.
 
 #pragma once
-
+#include <vector>
+#include "Button.h"
+#include "IScreen.h"
 #include "olcPixelGameEngine/olcPixelGameEngine.h"
-#include "MenuScreen.h"
 
-class GameEngine final :
-    public olc::PixelGameEngine
+class MenuScreen : public IScreen
 {
 public:
-    GameEngine();
-    ~GameEngine() override = default;
+	MenuScreen(olc::PixelGameEngine* gameEngine);
+	~MenuScreen() override = default;
 
-    bool OnUserCreate() override;
-    bool OnUserUpdate(float fElapsedTime) override;
-    bool OnUserDestroy() override;
+	void update() override;
+	void render() override;
 
 private:
 
-    MenuScreen mMenu;
+	olc::PixelGameEngine* mGameEngine;
 
-    IScreen* mCurrentScreen;
+	Button mBeginButton;
+
+	std::vector<Button*> mButtons;
+
 };
 
