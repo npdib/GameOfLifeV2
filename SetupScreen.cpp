@@ -15,17 +15,17 @@
 
 #include <cstdio>
 
-SetupScreen::SetupScreen(GameEngine* gameEngine, CellBoard cells)
+SetupScreen::SetupScreen(GameEngine* gameEngine)
 	: mGameEngine(gameEngine)
 	, mClickable(false)
 	, mRowMinus(mGameEngine, Button::Config{ 10, 10, "-", {10, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
 	, mRowPlus(mGameEngine, Button::Config{ 10, 10, "+", {50, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
 	, mColumnMinus(mGameEngine, Button::Config{10, 10, "-", {100, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN})
 	, mColumnPlus(mGameEngine, Button::Config{ 10, 10, "+", {140, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
-	, mGo(mGameEngine, Button::Config{ 30, 10, "Go", {65, 145}, {7, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN})
+	, mGo(mGameEngine, Button::Config{ 30, 10, "Go", {65, 145}, {7, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
+	, mRandom(mGameEngine, Button::Config{ 10, 10, "R", {145, 75}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN})
 	, mRows(10)
 	, mColumns(10)
-	, mCells(std::move(cells))
 	, mActiveCell(nullptr)
 {
 	mButtons.push_back(&mRowPlus);
@@ -33,6 +33,7 @@ SetupScreen::SetupScreen(GameEngine* gameEngine, CellBoard cells)
 	mButtons.push_back(&mColumnPlus);
 	mButtons.push_back(&mColumnMinus);
 	mButtons.push_back(&mGo);
+	mButtons.push_back(&mRandom);
 
 	mCells.resize(mRows);
 
@@ -98,6 +99,25 @@ void SetupScreen::update()
 			if (mGo.GetActive())
 			{
 				mGameEngine->ChangeState(GameEngine::State::Running);
+				mClickable = false;
+			}
+
+			if (mRandom.GetActive())
+			{
+				for (auto& row : mCells)
+				{
+					for (auto& cell : row)
+					{
+						if ((rand() % 2) == 1)
+						{
+							cell.SetAlive();
+						}
+						else
+						{
+							cell.SetDead();
+						}
+					}
+				}
 				mClickable = false;
 			}
 		}

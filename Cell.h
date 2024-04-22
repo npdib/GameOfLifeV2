@@ -15,6 +15,8 @@ public:
 	~Cell() = default;
 
 	void Toggle() { mAlive = !mAlive; }
+	void SetAlive() { mAlive = true; }
+	void SetDead() { mAlive = false; }
 
 	bool GetState() const { return mAlive; }
 private:

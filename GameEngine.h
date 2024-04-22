@@ -48,7 +48,5 @@ private:
 
     IScreen* mCurrentScreen;
 
-    CellBoard mCells;
-
     void ClearScreen();
 };

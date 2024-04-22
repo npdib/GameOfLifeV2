@@ -19,7 +19,7 @@ typedef std::vector<std::vector<Cell>> CellBoard;
 class SetupScreen : public IScreen
 {
 public:
-	SetupScreen(GameEngine* gameEngine, CellBoard cells);
+	SetupScreen(GameEngine* gameEngine);
 
 	void update() override;
 	void render() override;
@@ -38,6 +38,7 @@ private:
 	Button mColumnMinus;
 	Button mColumnPlus;
 	Button mGo;
+	Button mRandom;
 
 	uint8_t mRows;
 	uint8_t mColumns;
