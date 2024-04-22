@@ -12,6 +12,8 @@
 #include "olcPixelGameEngine/olcPixelGameEngine.h"
 #include "MenuScreen.h"
 #include "SetupScreen.h"
+#include <vector>
+
 
 class GameEngine : public olc::PixelGameEngine
 {
@@ -42,6 +44,8 @@ private:
     SetupScreen mSetup;
 
     IScreen* mCurrentScreen;
+
+    CellBoard mCells;
 
     void ClearScreen();
 };

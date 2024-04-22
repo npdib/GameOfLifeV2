@@ -11,19 +11,23 @@
 #include "IScreen.h"
 #include "Button.h"
 #include <vector>
+#include "Cell.h"
 
 class GameEngine;
+typedef std::vector<std::vector<Cell>> CellBoard;
 
 class SetupScreen : public IScreen
 {
 public:
-	SetupScreen(GameEngine* gameEngine);
+	SetupScreen(GameEngine* gameEngine, CellBoard cells);
 
 	void update() override;
 	void render() override;
 
+	CellBoard GetCellBoard() const { return mCells; }
 private:
 	GameEngine* mGameEngine;
+	bool mClickable;
 
 	Button mRowMinus;
 	Button mRowPlus;
@@ -34,6 +38,14 @@ private:
 	uint8_t mRows;
 	uint8_t mColumns;
 
-	std::vector<Button> mButtons;
+	std::vector<Button*> mButtons;
+
+	CellBoard mCells;
+
+	void RemoveRow();
+	void AddRow();
+	void RemoveColumn();
+	void AddColumn();
+
 };
 

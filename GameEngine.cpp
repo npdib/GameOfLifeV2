@@ -12,7 +12,7 @@
 GameEngine::GameEngine()
 	: mState(State::Menu)
 	, mMenu(this)
-	, mSetup(this)
+	, mSetup(this, mCells)
 	, mCurrentScreen(&mMenu)
 {
 	sAppName = "Game of Life";
