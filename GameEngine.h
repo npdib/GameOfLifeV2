@@ -11,6 +11,7 @@
 
 #include "olcPixelGameEngine/olcPixelGameEngine.h"
 #include "MenuScreen.h"
+#include "SetupScreen.h"
 
 class GameEngine : public olc::PixelGameEngine
 {
@@ -20,7 +21,8 @@ public:
 	    Menu,
         Setup,
         Running,
-        Finished
+        Finished,
+        Exit
     };
 
     GameEngine();
@@ -37,6 +39,9 @@ private:
     State mState;
 
     MenuScreen mMenu;
+    SetupScreen mSetup;
 
     IScreen* mCurrentScreen;
+
+    void ClearScreen();
 };

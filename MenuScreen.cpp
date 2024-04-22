@@ -13,7 +13,7 @@
 MenuScreen::MenuScreen(GameEngine* gameEngine)
 	: mGameEngine(gameEngine)
 	, mBeginButton(mGameEngine, Button::Config{ 45, 12, "Begin", {57, 70}, {3, 2}, olc::WHITE, olc::DARK_BLUE, olc::DARK_GREEN })
-	, mExitButton(mGameEngine, Button::Config{ 45, 12, "Exit", {57, 90}, {5, 2}, olc::WHITE, olc::DARK_BLUE, olc::DARK_GREEN })
+	, mExitButton(mGameEngine, Button::Config{ 45, 12, "Exit", {57, 90}, {7, 2}, olc::WHITE, olc::DARK_BLUE, olc::DARK_GREEN })
 {
 	mButtons.push_back(&mBeginButton);
 	mButtons.push_back(&mExitButton);
@@ -31,6 +31,11 @@ void MenuScreen::update()
 		if (mBeginButton.GetActive())
 		{
 			mGameEngine->ChangeState(GameEngine::State::Setup);
+		}
+
+		if (mExitButton.GetActive())
+		{
+			mGameEngine->ChangeState(GameEngine::State::Exit);
 		}
 	}
 }
