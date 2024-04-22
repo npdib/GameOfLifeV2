@@ -42,24 +42,32 @@ void GameEngine::ChangeState(State newState)
 {
 	if (newState != mState)
 	{
-		mState = newState;
-		switch (mState)
+		switch (newState)
 		{
 		case State::Menu: 
 			mCurrentScreen = &mMenu;
 			break;
-		case State::Setup: 
+		case State::Setup:
+			if (mState == State::Running)
+			{
+				mSetup.UpdateBoard(mRunning.GetCellBoard());
+			}
 			mCurrentScreen = &mSetup;
 			break;
 		case State::Running:
 			mRunning.UpdateBoard(mSetup.GetCellBoard());
+			mRunning.ClearSteps();
 			mCurrentScreen = &mRunning;
 			break;
 		case State::Finished: break;
 		case State::Exit:
+			olc_Terminate();
 			break;
-		default: ;
+		default: 
+			break;;
 		}
+
+		mState = newState;
 	}
 }
 

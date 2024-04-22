@@ -17,7 +17,7 @@ int main()
 {
 	GameEngine game_engine;
 
-	if (game_engine.Construct(160, 160, 4, 4))
+	if (game_engine.Construct(160, 160, 4, 4, true))
 	{
 		game_engine.Start();
 	}

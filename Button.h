@@ -33,10 +33,12 @@ public:
 	[[nodiscard]] bool GetActive() const { return  mActive; }
 	void draw() const;
 
+	void ChangeText(const std::string& text) { mConfig.text = text; }
+
 private:
 	olc::PixelGameEngine* mGameEngine;
 	bool mActive;
-	const Config mConfig;
+	Config mConfig;
 
 	bool mMouseXContained(const uint32_t& mouseX) const;
 	bool mMouseYContained(const uint32_t& mouseY) const;

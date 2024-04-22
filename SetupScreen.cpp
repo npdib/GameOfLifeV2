@@ -18,14 +18,16 @@
 SetupScreen::SetupScreen(GameEngine* gameEngine)
 	: mGameEngine(gameEngine)
 	, mClickable(false)
-	, mRowMinus(mGameEngine, Button::Config{ 10, 10, "-", {10, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
-	, mRowPlus(mGameEngine, Button::Config{ 10, 10, "+", {50, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
-	, mColumnMinus(mGameEngine, Button::Config{10, 10, "-", {100, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN})
-	, mColumnPlus(mGameEngine, Button::Config{ 10, 10, "+", {140, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
-	, mGo(mGameEngine, Button::Config{ 30, 10, "Go", {65, 145}, {7, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
-	, mRandom(mGameEngine, Button::Config{ 10, 10, "R", {145, 75}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN})
-	, mRows(10)
-	, mColumns(10)
+	, mRowMinus(mGameEngine, Button::Config{ 10, 10, "-", {10, 133}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
+	, mRowPlus(mGameEngine, Button::Config{ 10, 10, "+", {50, 133}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
+	, mColumnMinus(mGameEngine, Button::Config{10, 10, "-", {100, 133}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN})
+	, mColumnPlus(mGameEngine, Button::Config{ 10, 10, "+", {140, 133}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
+	, mGo(mGameEngine, Button::Config{ 30, 10, "Go", {65, 133}, {7, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
+	, mRandom(mGameEngine, Button::Config{ 10, 10, "R", {142, 60}, {1, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
+	, mClear(mGameEngine, Button::Config{ 10, 10, "C", {142, 80}, {1, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
+	, mBack(mGameEngine, Button::Config{ 20, 10, "<-", {5, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN})
+	, mRows(20)
+	, mColumns(20)
 	, mActiveCell(nullptr)
 {
 	mButtons.push_back(&mRowPlus);
@@ -34,6 +36,8 @@ SetupScreen::SetupScreen(GameEngine* gameEngine)
 	mButtons.push_back(&mColumnMinus);
 	mButtons.push_back(&mGo);
 	mButtons.push_back(&mRandom);
+	mButtons.push_back(&mClear);
+	mButtons.push_back(&mBack);
 
 	mCells.resize(mRows);
 
@@ -120,6 +124,18 @@ void SetupScreen::update()
 				}
 				mClickable = false;
 			}
+
+			if (mClear.GetActive())
+			{
+				ClearBoard();
+				mClickable = false;
+			}
+
+			if (mBack.GetActive())
+			{
+				mGameEngine->ChangeState(GameEngine::State::Menu);
+				mClickable = false;
+			}
 		}
 	}
 
@@ -132,8 +148,8 @@ void SetupScreen::update()
 void SetupScreen::render()
 {
 	mGameEngine->DrawString({ (mGameEngine->ScreenWidth() - 40) / 2, 5 }, "Setup");
-	mGameEngine->DrawString({ 113, 147 }, "Row");
-	mGameEngine->DrawString({ 24, 147 }, "Col");
+	mGameEngine->DrawString({ 113, 135 }, "Row");
+	mGameEngine->DrawString({ 24, 135 }, "Col");
 
 	for (const auto& button : mButtons)
 	{
@@ -141,6 +157,17 @@ void SetupScreen::render()
 	}
 
 	DrawBoard();
+}
+
+void SetupScreen::ClearBoard()
+{
+	for (auto& cellRow : mCells)
+	{
+		for (auto& cell : cellRow)
+		{
+			cell.SetDead();
+		}
+	}
 }
 
 void SetupScreen::RemoveRow()
@@ -194,7 +221,7 @@ void SetupScreen::DrawBoard()
 		x = xStart;
 		for (auto& cell : cellRow)
 		{
-			mGameEngine->FillRect(x, y , cellSize - 1, cellSize - 1, cell.GetState() ? olc::GREEN : olc::RED);
+			mGameEngine->FillRect(x, y , cellSize - 1, cellSize - 1, cell.GetState() ? olc::MAGENTA : olc::VERY_DARK_MAGENTA);
 
 			const olc::vi2d mousePos = mGameEngine->GetMousePos();
 			if (mousePos.x > x && mousePos.x < x + cellSize)

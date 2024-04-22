@@ -24,11 +24,12 @@ public:
 	void update() override;
 	void render() override;
 
+	void UpdateBoard(CellBoard board) { mCells = std::move(board); }
 	CellBoard GetCellBoard() const { return mCells; }
 
 private:
-	static constexpr uint8_t kBoardWidth = 120;
-	static constexpr uint8_t kBoardHeight = 120;
+	static constexpr uint8_t kBoardWidth = 100;
+	static constexpr uint8_t kBoardHeight = 100;
 
 	GameEngine* mGameEngine;
 	bool mClickable;
@@ -39,6 +40,8 @@ private:
 	Button mColumnPlus;
 	Button mGo;
 	Button mRandom;
+	Button mClear;
+	Button mBack;
 
 	uint8_t mRows;
 	uint8_t mColumns;
@@ -47,6 +50,8 @@ private:
 
 	CellBoard mCells;
 	Cell* mActiveCell;
+
+	void ClearBoard();
 
 	void RemoveRow();
 	void AddRow();

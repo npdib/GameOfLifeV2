@@ -13,6 +13,8 @@
 #include "Cell.h"
 #include <chrono>
 
+#include "Button.h"
+
 class GameEngine;
 typedef std::vector<std::vector<Cell>> CellBoard;
 
@@ -25,15 +27,26 @@ public:
     void render() override;
 
     void UpdateBoard(CellBoard board) { mCells = std::move(board); }
+    CellBoard GetCellBoard() const { return mCells; }
+    void ClearSteps() { mSteps = 0; }
+
 
 private:
-    static constexpr uint8_t kBoardWidth = 140;
-    static constexpr uint8_t kBoardHeight = 140;
+    static constexpr uint8_t kBoardWidth = 130;
+    static constexpr uint8_t kBoardHeight = 130;
 
     GameEngine* mGameEngine;
     CellBoard mCells;
 
     bool mRunning;
+    bool mClickable;
+
+    Button mPausePlay;
+    Button mBack;
+    std::vector<Button*> mButtons;
+
+    uint16_t mSteps;
+
 
     std::chrono::time_point<std::chrono::system_clock> mTimer;
     

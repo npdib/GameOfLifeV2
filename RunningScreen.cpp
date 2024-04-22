@@ -18,25 +18,89 @@ using namespace std::chrono;
 
 RunningScreen::RunningScreen(GameEngine* gameEngine)
 	: mGameEngine(gameEngine)
-	, mRunning(true)
+	, mRunning(false)
+	, mClickable(false)
+	, mPausePlay(mGameEngine, Button::Config{ 40, 10, "Play", {60, 133}, {2, 1}, olc::WHITE, olc::RED, olc::DARK_GREEN })
+	, mBack(mGameEngine, Button::Config{ 20, 10, "<-", {5, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
+	, mSteps(0)
 {
+	mButtons.push_back(&mPausePlay);
 	mTimer = system_clock::now();
 }
 
 void RunningScreen::update()
 {
+	for (const auto& button : mButtons)
+	{
+		button->UpdateActive();
+	}
+
+	if (!mRunning)
+	{
+		mBack.UpdateActive();
+	}
+
+
+	if (mGameEngine->GetMouse(olc::Mouse::LEFT).bPressed || mGameEngine->GetMouse(olc::Mouse::LEFT).bHeld)
+	{
+		if (mClickable)
+		{
+			if (mPausePlay.GetActive())
+			{
+				mRunning = !mRunning;
+
+				if (mRunning)
+				{
+					mPausePlay.ChangeText("Stop");
+				}
+				else
+				{
+					mPausePlay.ChangeText("Play");
+				}
+
+				mClickable = false;
+			}
+
+			if (mBack.GetActive())
+			{
+				mGameEngine->ChangeState(GameEngine::State::Setup);
+				mClickable = false;
+			}
+		}
+	}
+
+	if (mGameEngine->GetMouse(olc::Mouse::LEFT).bReleased)
+	{
+		mClickable = true;
+	}
+
 	if (mRunning)
 	{
-		if (duration_cast<milliseconds>(system_clock::now() - mTimer) > 100ms)
+		if (duration_cast<milliseconds>(system_clock::now() - mTimer) > 200ms)
 		{
 			Tick();
 			mTimer = system_clock::now();
+			++mSteps;
 		}
 	}
 }
 
 void RunningScreen::render()
 {
+	static char buff[32];
+	snprintf(buff, 32, "Steps: %d", mSteps);
+	mGameEngine->DrawString({ 60, 147 }, buff);
+
+	for (const auto& button : mButtons)
+	{
+		button->draw();
+	}
+
+	if (!mRunning)
+	{
+		mBack.draw();
+	}
+
 	DrawBoard();
 }
 
@@ -48,7 +112,7 @@ void RunningScreen::DrawBoard() const
 	const uint8_t cellSize = std::min(kBoardWidth / mColumns, kBoardHeight / mRows);
 
 	uint8_t x = (mGameEngine->ScreenWidth() - kBoardWidth) / 2u;
-	uint8_t y = (mGameEngine->ScreenHeight() - kBoardHeight) / 2u;
+	uint8_t y = (mGameEngine->ScreenHeight() - kBoardHeight) / 3u;
 	const uint8_t xStart = x + ((mRows > mColumns) ? ((mRows - mColumns) * cellSize) / 2 : 0);
 	y += ((mColumns > mRows) ? ((mColumns - mRows) * cellSize) / 2 : 0);
 
@@ -58,7 +122,7 @@ void RunningScreen::DrawBoard() const
 		x = xStart;
 		for (auto& cell : cellRow)
 		{
-			mGameEngine->FillRect(x, y, cellSize - 1, cellSize - 1, cell.GetState() ? olc::GREEN : olc::RED);
+			mGameEngine->FillRect(x, y, cellSize - 1, cellSize - 1, cell.GetState() ? olc::MAGENTA : olc::VERY_DARK_MAGENTA);
 			x += cellSize;
 		}
 		y += cellSize;
@@ -79,7 +143,7 @@ void RunningScreen::Tick()
 				{
 				case 0:
 				case 1:
-					// dies from undepopulation
+					// dies from underpopulation
 					newBoard[y][x].SetDead();
 					break;
 				case 2:
