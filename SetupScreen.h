@@ -25,7 +25,11 @@ public:
 	void render() override;
 
 	CellBoard GetCellBoard() const { return mCells; }
+
 private:
+	static constexpr uint8_t kBoardWidth = 120;
+	static constexpr uint8_t kBoardHeight = 120;
+
 	GameEngine* mGameEngine;
 	bool mClickable;
 
@@ -41,11 +45,13 @@ private:
 	std::vector<Button*> mButtons;
 
 	CellBoard mCells;
+	Cell* mActiveCell;
 
 	void RemoveRow();
 	void AddRow();
 	void RemoveColumn();
 	void AddColumn();
 
+	void DrawBoard();
 };
 

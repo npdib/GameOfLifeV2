@@ -1,4 +1,4 @@
-// Cell.h
+// RunningScreen.cpp
 //   
 // (c) eg technology ltd, 2024. All rights reserved. 
 //  
@@ -7,16 +7,16 @@
 // purposes. The source code is confidential information and must not be disclosed to third 
 // parties or used without the express written permission of eg technology ltd.
 
-#pragma once
-class Cell
+#include "RunningScreen.h"
+
+RunningScreen::RunningScreen()
 {
-public:
-	Cell();
-	~Cell() = default;
+}
 
-	void Toggle() { mAlive = !mAlive; }
+void RunningScreen::update()
+{
+}
 
-	bool GetState() const { return mAlive; }
-private:
-	bool mAlive;
-};
+void RunningScreen::render()
+{
+}

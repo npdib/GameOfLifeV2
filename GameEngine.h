@@ -14,6 +14,8 @@
 #include "SetupScreen.h"
 #include <vector>
 
+#include "RunningScreen.h"
+
 
 class GameEngine : public olc::PixelGameEngine
 {
@@ -42,6 +44,7 @@ private:
 
     MenuScreen mMenu;
     SetupScreen mSetup;
+    RunningScreen mRunning;
 
     IScreen* mCurrentScreen;
 

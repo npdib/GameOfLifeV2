@@ -1,4 +1,4 @@
-// Cell.h
+// RunningScreen.h
 //   
 // (c) eg technology ltd, 2024. All rights reserved. 
 //  
@@ -8,15 +8,12 @@
 // parties or used without the express written permission of eg technology ltd.
 
 #pragma once
-class Cell
+#include "IScreen.h"
+
+class RunningScreen : public IScreen
 {
 public:
-	Cell();
-	~Cell() = default;
-
-	void Toggle() { mAlive = !mAlive; }
-
-	bool GetState() const { return mAlive; }
-private:
-	bool mAlive;
+    RunningScreen();
+    void update() override;
+    void render() override;
 };

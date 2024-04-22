@@ -17,7 +17,7 @@
 
 SetupScreen::SetupScreen(GameEngine* gameEngine, CellBoard cells)
 	: mGameEngine(gameEngine)
-	, mClickable(true)
+	, mClickable(false)
 	, mRowMinus(mGameEngine, Button::Config{ 10, 10, "-", {10, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
 	, mRowPlus(mGameEngine, Button::Config{ 10, 10, "+", {50, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN })
 	, mColumnMinus(mGameEngine, Button::Config{10, 10, "-", {100, 145}, {2, 2}, olc::WHITE, olc::RED, olc::DARK_GREEN})
@@ -26,6 +26,7 @@ SetupScreen::SetupScreen(GameEngine* gameEngine, CellBoard cells)
 	, mRows(10)
 	, mColumns(10)
 	, mCells(std::move(cells))
+	, mActiveCell(nullptr)
 {
 	mButtons.push_back(&mRowPlus);
 	mButtons.push_back(&mRowMinus);
@@ -52,6 +53,12 @@ void SetupScreen::update()
 	{
 		if (mClickable)
 		{
+			if (mActiveCell != nullptr)
+			{
+				mActiveCell->Toggle();
+				mClickable = false;
+			}
+
 			if (mRowMinus.GetActive())
 			{
 				if (mRows > 1)
@@ -113,17 +120,7 @@ void SetupScreen::render()
 		button->draw();
 	}
 
-	static char buff[32];
-
-	int len = std::snprintf(buff, 32, "%d:\t%llu", mRows, mCells.size());
-
-	mGameEngine->DrawString({ 25, 50 }, buff);
-
-
-	len = std::snprintf(buff, 32, "%d:\t%llu", mColumns, mCells.begin()->size());
-
-	mGameEngine->DrawString({ 25, 75 }, buff);
-
+	DrawBoard();
 }
 
 void SetupScreen::RemoveRow()
@@ -159,4 +156,38 @@ void SetupScreen::AddColumn()
 		row.push_back(Cell());
 	}
 	++mColumns;
+}
+
+void SetupScreen::DrawBoard()
+{
+	const uint8_t cellSize = std::min(kBoardWidth / mColumns, kBoardHeight / mRows);
+
+	uint8_t x = (mGameEngine->ScreenWidth() - kBoardWidth) / 2u;
+	uint8_t y = (mGameEngine->ScreenHeight() - kBoardHeight) / 2u;
+	const uint8_t xStart = x + ((mRows > mColumns) ? ((mRows - mColumns) * cellSize) / 2 : 0);
+	y += ((mColumns > mRows) ? ((mColumns - mRows) * cellSize) / 2 : 0);
+
+	mActiveCell = nullptr;
+
+	for (auto& cellRow : mCells)
+	{
+		x = xStart;
+		for (auto& cell : cellRow)
+		{
+			mGameEngine->FillRect(x, y , cellSize - 1, cellSize - 1, cell.GetState() ? olc::GREEN : olc::RED);
+
+			const olc::vi2d mousePos = mGameEngine->GetMousePos();
+			if (mousePos.x > x && mousePos.x < x + cellSize)
+			{
+				if (mousePos.y > y && mousePos.y < y + cellSize)
+				{
+					mGameEngine->DrawRect(x, y, cellSize - 2, cellSize - 2, olc::WHITE);
+					mActiveCell = &cell;
+				}				
+			}
+
+			x += cellSize;
+		}
+		y += cellSize;
+	}
 }

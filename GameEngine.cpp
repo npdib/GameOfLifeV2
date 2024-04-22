@@ -14,6 +14,7 @@ GameEngine::GameEngine()
 	, mMenu(this)
 	, mSetup(this, mCells)
 	, mCurrentScreen(&mMenu)
+	, mRunning()
 {
 	sAppName = "Game of Life";
 }
@@ -50,7 +51,10 @@ void GameEngine::ChangeState(State newState)
 		case State::Setup: 
 			mCurrentScreen = &mSetup;
 			break;
-		case State::Running: break;
+		case State::Running:
+			mCells = mSetup.GetCellBoard();
+			mCurrentScreen = &mRunning;
+			break;
 		case State::Finished: break;
 		case State::Exit:
 			break;
